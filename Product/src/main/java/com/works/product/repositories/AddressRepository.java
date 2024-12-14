@@ -10,6 +10,7 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
             "    aid, address, title, cid, code, name\n" +
             "    from PUBLIC.ADDRESS\n" +
             "inner join PUBLIC.ADDRESS_CITIES AC on ADDRESS.AID = AC.ADDRESS_AID\n" +
-            "inner join PUBLIC.CITY C on C.CID = AC.CITIES_CID", nativeQuery = true)
-    List<AddressJoinCity> joinAddress();
+            "inner join PUBLIC.CITY C on C.CID = AC.CITIES_CID where C.CID = ?1", nativeQuery = true)
+        //@Query(value = "call procedureName()", nativeQuery = true)
+    List<AddressJoinCity> joinAddress(int cid);
 }
