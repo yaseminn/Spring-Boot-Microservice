@@ -1,5 +1,6 @@
 package com.works.customer;
 
+import com.works.customer.models.Comment;
 import org.springframework.cloud.client.ServiceInstance;
 import com.works.customer.models.ProductModel;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -19,9 +20,11 @@ import java.util.Map;
 public class CustomerRestController {
     final DiscoveryClient discoveryClient;
     final IProduct iProduct;
-    public CustomerRestController(DiscoveryClient discoveryClient, IProduct iProduct) {
+    final IPlaceHolder iPlaceHolder;
+    public CustomerRestController(DiscoveryClient discoveryClient, IProduct iProduct, IPlaceHolder iPlaceHolder) {
         this.discoveryClient = discoveryClient;
         this.iProduct = iProduct;
+        this.iPlaceHolder = iPlaceHolder;
     }
     @GetMapping("data")
     public Map data() {
@@ -48,5 +51,10 @@ public class CustomerRestController {
             map.put("data", response.getBody().getContent());
         }
         return map;*/
+    }
+
+    @GetMapping("comment")
+    public Comment comment(@RequestParam(defaultValue = "1") String id) {
+        return iPlaceHolder.getComments(id);
     }
 }
