@@ -32,9 +32,11 @@ public class ProductRestController {
         return productService.saveAll(products);
     }
 
-    @GetMapping("search")
-    public List<Product> search(@RequestParam(defaultValue = "") String q) {
-        return productService.search(q);
+    public Page<Product> search(
+            @RequestParam(defaultValue = "") String q,
+            @RequestParam(defaultValue = "0") int pageNumber
+    ) {
+        return productService.search(q, pageNumber);
     }
 
 
