@@ -18,8 +18,10 @@ import java.util.Map;
 @RequestMapping("customer")
 public class CustomerRestController {
     final DiscoveryClient discoveryClient;
-    public CustomerRestController(DiscoveryClient discoveryClient) {
+    final IProduct iProduct;
+    public CustomerRestController(DiscoveryClient discoveryClient, IProduct iProduct) {
         this.discoveryClient = discoveryClient;
+        this.iProduct = iProduct;
     }
     @GetMapping("data")
     public Map data() {
@@ -33,7 +35,10 @@ public class CustomerRestController {
     @GetMapping("product")
     public Map product(@RequestParam(defaultValue = "0") int pageNumber) {
         Map map = new LinkedHashMap();
-        RestTemplate restTemplate = new RestTemplate();
+        ProductModel productModel = iProduct.productList(pageNumber);
+        map.put("data", productModel.getContent());
+        return map;
+        /*RestTemplate restTemplate = new RestTemplate();
         List<ServiceInstance> instances = discoveryClient.getInstances("product");
         if (!instances.isEmpty()) {
             ServiceInstance instance = instances.get(0);
@@ -42,6 +47,6 @@ public class CustomerRestController {
             map.put("url", url);
             map.put("data", response.getBody().getContent());
         }
-        return map;
+        return map;*/
     }
 }
