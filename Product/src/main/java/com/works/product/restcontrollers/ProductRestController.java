@@ -3,6 +3,7 @@ package com.works.product.restcontrollers;
 import com.works.product.entities.Product;
 import com.works.product.services.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class ProductRestController {
     }
 
     @GetMapping("list")
-    public List<Product> list() {
-        return productService.findAll();
+    public Page<Product> list(@RequestParam(defaultValue = "0") int pageNumber) {
+        return productService.findAll(pageNumber);
     }
 
     @PostMapping("saveAll")
