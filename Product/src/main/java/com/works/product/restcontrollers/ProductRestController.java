@@ -26,4 +26,10 @@ public class ProductRestController {
         return productService.findAll();
     }
 
+    @PostMapping("saveAll")
+    public List<Product> saveAll(@Valid @RequestBody List<Product> products) {
+        return productService.saveAll(products);
+    }
+
+
 }
