@@ -31,5 +31,10 @@ public class ProductService {
         return productRepository.saveAll(productList);
     }
 
+    public List<Product> search(String q) {
+        List<Product> productList = productRepository.findByTitleContainsOrDescriptionContainsAllIgnoreCase(q,q);
+        return productList;
+    }
+
 
 }
