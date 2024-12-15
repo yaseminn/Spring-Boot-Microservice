@@ -7,12 +7,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.IOException;
+import io.micrometer.tracing.Tracer;
+
 @Configuration
 public class FilterConfig implements Filter {
+
+    final Tracer tracer;
+    public FilterConfig(Tracer tracer) {
+        this.tracer = tracer;
+    }
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
+
+        String spanId = tracer.currentTraceContext().context().spanId();
+        String traceId = tracer.currentTraceContext().context().traceId();
+
         String url = req.getRequestURI();
         String sessionID = req.getSession().getId();
         String header = req.getHeader("user-agent");
@@ -25,6 +37,10 @@ public class FilterConfig implements Filter {
         }
         String time = ""+System.currentTimeMillis();
         System.out.println(url + "-" + sessionID + "-" + header + "-" + name + "-"+roles+"-"+time);
+
+        res.setHeader("spanId", spanId);
+        res.setHeader("traceId", traceId);
+
         filterChain.doFilter(req, res);
     }
 }
