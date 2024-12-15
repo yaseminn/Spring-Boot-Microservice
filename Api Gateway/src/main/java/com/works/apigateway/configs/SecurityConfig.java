@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class SecurityConfig {
 
     final CustomerService customerService;
     final PasswordEncoder passwordEncoder;
+    final FilterConfig filterConfig;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return
@@ -27,6 +29,7 @@ public class SecurityConfig {
                                         .requestMatchers("/customer/**").hasRole("customer")
                                         .requestMatchers("/admin/**").permitAll()
                         )
+                        .addFilterAfter(filterConfig, UsernamePasswordAuthenticationFilter.class)
                         .csrf( csrf -> csrf.disable() )
                         .formLogin( formLogin -> formLogin.disable() )
                         .build();
