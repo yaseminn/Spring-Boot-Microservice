@@ -7,7 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.io.IOException;
-import io.micrometer.tracing.Tracer;
+import brave.Tracer;
+
 
 @Configuration
 public class FilterConfig implements Filter {
@@ -22,8 +23,8 @@ public class FilterConfig implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        String spanId = tracer.currentTraceContext().context().spanId();
-        String traceId = tracer.currentTraceContext().context().traceId();
+        String spanId = tracer.currentSpan().context().spanIdString();
+        String traceId = tracer.currentSpan().context().traceIdString();
 
         String url = req.getRequestURI();
         String sessionID = req.getSession().getId();
